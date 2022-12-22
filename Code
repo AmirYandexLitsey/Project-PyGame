@@ -1,0 +1,31 @@
+import pygame as p, pygame
+import sys
+from pygame.locals import *
+
+pygame.init()
+
+
+def screen_setting(width, height):
+    p.init()
+    flag = p.RESIZABLE
+    screen = p.display.set_mode((width, height), flag, 0)
+    bk_orig = p.image.load("Phon.jpg").convert()
+    bg = p.transform.smoothscale(bk_orig, (width, height))
+
+    while True:
+        for event in p.event.get():
+            if event.type == p.QUIT:
+                sys.exit()
+            elif event.type == p.VIDEORESIZE:
+                width, height = event.w, event.h
+                screen = p.display.set_mode((width, height), flag, 0)
+                bg = p.transform.smoothscale(bk_orig, (width, height))
+            elif event.type == pygame.K_F11:
+                screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+                pass
+
+        screen.blit(bg, (0, 0))
+        p.display.flip()
+
+
+screen_setting(1280, 720)
