@@ -9,6 +9,7 @@ def screen_setting(width, height):
     p.init()
     mode = p.RESIZABLE
     bk_w, bk_h = width, height
+    window = False
     screen = p.display.set_mode((width, height), mode, 0)
     bk_orig = p.image.load("Phon.jpg").convert()
     bg = p.transform.smoothscale(bk_orig, (width, height))
@@ -19,17 +20,24 @@ def screen_setting(width, height):
                 sys.exit()
             elif event.type == p.VIDEORESIZE:
                 width, height = event.w, event.h
+                if window is False:
+                    bk_w, bk_h = event.w, event.h
                 screen = p.display.set_mode((width, height), mode, 0)
                 bg = p.transform.smoothscale(bk_orig, screen.get_size())
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_F11:
                     mode = pygame.FULLSCREEN
-                    bk_w, bk_h = screen.get_size()
+                    if window is True:
+                        pass
+                    else:
+                        bk_w, bk_h = screen.get_size()
+                        window = True
                     screen = p.display.set_mode((0, 0), mode, 0)
                     bg = p.transform.smoothscale(bk_orig, screen.get_size())
                 elif event.key == p.K_ESCAPE:
                     mode = pygame.RESIZABLE
                     width, height = bk_w, bk_h
+                    window = False
                     screen = p.display.set_mode((width, height), mode, 0)
                     bg = p.transform.smoothscale(bk_orig, screen.get_size())
 
