@@ -11,6 +11,8 @@ def screen_setting(width, height):
     bk_w, bk_h = width, height
     window = False
     screen = p.display.set_mode((width, height), mode, 0)
+    p.display.set_caption('Поймай крысу') #название окна
+    p.display.set_icon(pygame.image.load("icon.png")) #ставим иконку крысы для окна
     bk_orig = p.image.load("Phon.jpg").convert()
     bg = p.transform.smoothscale(bk_orig, (width, height))
 
