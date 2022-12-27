@@ -6,15 +6,21 @@ pygame.init()
 
 
 def screen_setting(width, height):
+    global pos
     p.init()
     mode = p.RESIZABLE
     bk_w, bk_h = width, height
     window = False
     screen = p.display.set_mode((width, height), mode, 0)
-    p.display.set_caption('Поймай крысу') #название окна
-    p.display.set_icon(pygame.image.load("icon.png")) #ставим иконку крысы для окна
+    p.display.set_caption('Поймай крысу')  # название окна
+    p.display.set_icon(pygame.image.load("icon.png"))  # ставим иконку крысы для окна
     bk_orig = p.image.load("Phon.jpg").convert()
+    mouse_image = p.image.load("2534908.png").convert()
+    mouse_image_transform = p.transform.smoothscale(mouse_image, (30, 30))
     bg = p.transform.smoothscale(bk_orig, (width, height))
+    color = mouse_image_transform.get_at((0, 0))
+    mouse_image_transform.set_colorkey(color)
+    pygame.mouse.set_visible(False)
 
     while True:
         for event in p.event.get():
@@ -44,7 +50,13 @@ def screen_setting(width, height):
                     bg = p.transform.smoothscale(bk_orig, screen.get_size())
 
         screen.blit(bg, (0, 0))
-        p.display.flip()
+        if p.mouse.get_focused():
+            x, y = pos = p.mouse.get_pos()
+            screen.blit(mouse_image_transform, (x - 10, y - 15))
+            p.display.update()
+        else:
+            p.display.update()
 
 
 screen_setting(1280, 720)
+с
