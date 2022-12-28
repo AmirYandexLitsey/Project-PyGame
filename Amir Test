@@ -1,4 +1,5 @@
 import pygame as p, pygame
+import os
 import pygame
 import sys
 
@@ -19,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("111.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (200, height / 2)
+        self.rect.center = (200, 360)
 
 
 def screen_setting(width, height):
@@ -31,7 +32,7 @@ def screen_setting(width, height):
     screen = p.display.set_mode((width, height), mode, 0)
     p.display.set_caption('Поймай крысу')  # название окна
     p.display.set_icon(pygame.image.load("icon.png"))  # ставим иконку крысы для окна
-    bk_orig = p.image.load("Phon.jpg").convert()
+    bk_orig = p.image.load("Phon.png").convert()
     mouse_image = p.image.load("2534908.png").convert()
     mouse_image_transform = p.transform.smoothscale(mouse_image, (30, 30))
     bg = p.transform.smoothscale(bk_orig, (width, height))
@@ -71,17 +72,19 @@ def screen_setting(width, height):
                     screen = p.display.set_mode((width, height), mode, 0)
                     bg = p.transform.smoothscale(bk_orig, screen.get_size())
 
-        all_sprites.draw(screen)
-        all_sprites.update()
-        pygame.display.flip()
-
         screen.blit(bg, (0, 0))
         if p.mouse.get_focused():
+            all_sprites.draw(screen)
+            all_sprites.update()
             x, y = pos = p.mouse.get_pos()
             screen.blit(mouse_image_transform, (x - 10, y - 15))
             p.display.update()
         else:
+            all_sprites.draw(screen)
+            all_sprites.update()
             p.display.update()
+
+
 
 
 
