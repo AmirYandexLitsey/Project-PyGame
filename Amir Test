@@ -15,37 +15,94 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 
-class Player(pygame.sprite.Sprite):
+class Level1(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("111.png")
+        self.image = pygame.image.load("sprites/1.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (200, 360)
+        if window is True:
+            self.rect.center = (990 - 400, 540)
+        else:
+            self.rect.center = (bk_w / 2 - 400, bk_h / 2)
+
+
+class Level2(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/2.png")
+        self.rect = self.image.get_rect()
+        if window is True:
+            self.rect.center = (990 - 200, 540)
+        else:
+            self.rect.center = (bk_w / 2 - 200, bk_h / 2)
+
+
+class Level3(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/3.png")
+        self.rect = self.image.get_rect()
+        if window is True:
+            self.rect.center = (990, 540)
+        else:
+            self.rect.center = (bk_w / 2, bk_h / 2)
+
+
+class Level4(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/4.png")
+        self.rect = self.image.get_rect()
+        if window is True:
+            self.rect.center = (990 + 200, 540)
+        else:
+            self.rect.center = (bk_w / 2 + 200, bk_h / 2)
+
+
+class Level5(pygame.sprite.Sprite):
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.clicked = pygame.image.load("sprites/5_clicked.png")
+        self.noclicked = pygame.image.load("sprites/5.png")
+        self.image = self.noclicked
+        self.rect = self.image.get_rect()
+        if window is True:
+            self.rect.center = (990 + 400, 540)
+        else:
+            self.rect.center = (bk_w / 2 + 400, bk_h / 2)
+
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            self.image = self.clicked
 
 
 def screen_setting(width, height):
-    global pos
+    global pos, bk_w, bk_h, window
     p.init()
     mode = p.RESIZABLE
     bk_w, bk_h = width, height
+    clock = p.time.Clock()
     window = False
     screen = p.display.set_mode((width, height), mode, 0)
     p.display.set_caption('Поймай крысу')  # название окна
-    p.display.set_icon(pygame.image.load("icon.png"))  # ставим иконку крысы для окна
-    bk_orig = p.image.load("Phon.png").convert()
-    mouse_image = p.image.load("2534908.png").convert()
+    p.display.set_icon(pygame.image.load("sprites/icon.png"))  # ставим иконку крысы для окна
+    bk_orig = p.image.load("sprites/Phon.jpg").convert()
+    mouse_image = p.image.load("sprites/2534908.png").convert()
     mouse_image_transform = p.transform.smoothscale(mouse_image, (30, 30))
     bg = p.transform.smoothscale(bk_orig, (width, height))
     color = mouse_image_transform.get_at((0, 0))
     mouse_image_transform.set_colorkey(color)
     pygame.mouse.set_visible(False)
-    # Обновление
-    clock = pygame.time.Clock()
-    all_sprites = pygame.sprite.Group()
-    player = Player()
-    all_sprites.add(player)
 
     while True:
+        all_sprites = pygame.sprite.Group()
+        level1 = Level1()
+        level2 = Level2()
+        level3 = Level3()
+        level4 = Level4()
+        level5 = Level5()
+        all_sprites.add(level1, level2, level3, level4, level5)
         for event in p.event.get():
             if event.type == p.QUIT:
                 sys.exit()
@@ -71,6 +128,7 @@ def screen_setting(width, height):
                     window = False
                     screen = p.display.set_mode((width, height), mode, 0)
                     bg = p.transform.smoothscale(bk_orig, screen.get_size())
+            all_sprites.update(event)
 
         screen.blit(bg, (0, 0))
         if p.mouse.get_focused():
@@ -78,16 +136,15 @@ def screen_setting(width, height):
             all_sprites.update()
             x, y = pos = p.mouse.get_pos()
             screen.blit(mouse_image_transform, (x - 10, y - 15))
+            clock.tick(FPS)
             p.display.update()
+
         else:
             all_sprites.draw(screen)
             all_sprites.update()
+            clock.tick(FPS)
             p.display.update()
 
 
-
-
-
-
-
+pos, bk_w, bk_h = 0, 10, 10
 screen_setting(1280, 720)
