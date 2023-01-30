@@ -4,6 +4,7 @@ from pygame import mixer
 import random
 import sys
 
+pygame.init()
 width = 1280
 height = 720
 FPS = 60
@@ -88,10 +89,16 @@ class Rat(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("1.png")
         self.rect = self.image.get_rect()
+        if InLevel_5 is True:
+            if window is True:
+                self.rect.center = (1890, 1050)
+            else:
+                self.rect.center = (bk_w // 2, bk_h // 2)
 
-
-
-
+    def update(self, *args):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
+            print(1)
+            self.kill()
 
 
 class Back(pygame.sprite.Sprite):
@@ -133,9 +140,13 @@ def screen_setting(bk_w, bk_h):
     bg = p.transform.smoothscale(bk_orig, (bk_w, bk_h))
     bg5 = p.transform.smoothscale(bg_orig5, (bk_w, bk_h))
     clock = p.time.Clock()
+    all_sprites = pygame.sprite.Group()
+    Spawn = False
     while True:
+        otc = 1000
+        c = 0
+        Pause = True
         while Menu == True:
-            all_sprites = pygame.sprite.Group()
             level1 = Level1()
             level2 = Level2()
             level3 = Level3()
@@ -164,16 +175,31 @@ def screen_setting(bk_w, bk_h):
             if Menu is False:
                 break
 
+
         while InLevel_5 is True:  # Здесь начинаются уровни
-            all_sprites = pygame.sprite.Group()
-            rat = Rat()
+            ticks = pygame.time.get_ticks()
+            seconds = int(ticks / 1000 % 60)
             back = Back()
-            all_sprites.add(back, rat)
+            rat = Rat()
+            all_sprites.add(back,)
             pygame.mouse.set_visible(False)
+            if seconds // otc == 0:
+                otc += 1000
+                c += 1
+                if c % 60 == 0:
+                    Spawn = True
+                    print(2)
+            if Spawn:
+                all_sprites.add(rat)
+                Spawn = False
+            else:
+                pass
             for event in p.event.get():
                 if event.type == p.QUIT:
                     sys.exit()
+
                 all_sprites.update(event)
+
 
             screen.blit(bg5, (0, 0))
 
@@ -192,6 +218,8 @@ def screen_setting(bk_w, bk_h):
                 p.display.update()
 
 
+Spawn = False
+Kill5 = False
 Menu = True
 InLevel_5 = False
 InLevel_4 = False
