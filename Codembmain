@@ -19,6 +19,10 @@ BLUE = (0, 0, 255)
 
 # pygame.mixer.music.load("")
 
+sp = []
+for _ in range(1, 10):
+        sp.append(_)
+print(sp)
 class Level1(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -87,13 +91,19 @@ class Rat(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("1.png")
+        self.image = pygame.image.load("sprites/Rat-PNG-Picture.png")
         self.rect = self.image.get_rect()
-        if InLevel_5 is True:
-            if window is True:
-                self.rect.center = (1890, 1050)
-            else:
-                self.rect.center = (bk_w // 2, bk_h // 2)
+        spisok = random.choice(sp)
+        visota = spisok // 4
+        if spisok % 3 == 1:
+            self.rect.center = (475, 250 + visota * 125)
+        if spisok % 3 == 2:
+            self.rect.center = (600, 250 + visota * 125)
+        if spisok % 3 == 0:
+            self.rect.center = (725, 250 + visota * 125)
+
+
+
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
@@ -140,35 +150,36 @@ def screen_setting(bk_w, bk_h):
     bg = p.transform.smoothscale(bk_orig, (bk_w, bk_h))
     bg5 = p.transform.smoothscale(bg_orig5, (bk_w, bk_h))
     clock = p.time.Clock()
-    all_sprites = pygame.sprite.Group()
+    menu_sprites = pygame.sprite.Group()
+    level_sprites = p.sprite.Group()
     Spawn = False
+    level1 = Level1()
+    level2 = Level2()
+    level3 = Level3()
+    level4 = Level4()
+    level5 = Level5()
+    menu_sprites.add(level1, level2, level3, level4, level5)
     while True:
         otc = 1000
         c = 0
         Pause = True
         while Menu == True:
-            level1 = Level1()
-            level2 = Level2()
-            level3 = Level3()
-            level4 = Level4()
-            level5 = Level5()
-            all_sprites.add(level1, level2, level3, level4, level5)
             for event in p.event.get():
                 if event.type == p.QUIT:
                     sys.exit()
-                all_sprites.update(event)
+                menu_sprites.update(event)
             screen.blit(bg, (0, 0))
             if p.mouse.get_focused():
-                all_sprites.draw(screen)
-                all_sprites.update()
+                menu_sprites.draw(screen)
+                menu_sprites.update()
                 x, y = pos = p.mouse.get_pos()
                 screen.blit(mouse_image_transform, (x - 10, y - 15))
                 clock.tick(FPS)
                 p.display.update()
 
             else:
-                all_sprites.draw(screen)
-                all_sprites.update()
+                menu_sprites.draw(screen)
+                menu_sprites.update()
                 clock.tick(FPS)
                 p.display.update()
 
@@ -181,7 +192,7 @@ def screen_setting(bk_w, bk_h):
             seconds = int(ticks / 1000 % 60)
             back = Back()
             rat = Rat()
-            all_sprites.add(back,)
+            level_sprites.add(back)
             pygame.mouse.set_visible(False)
             if seconds // otc == 0:
                 otc += 1000
@@ -189,8 +200,9 @@ def screen_setting(bk_w, bk_h):
                 if c % 60 == 0:
                     Spawn = True
                     print(2)
+
             if Spawn:
-                all_sprites.add(rat)
+                level_sprites.add(rat)
                 Spawn = False
             else:
                 pass
@@ -198,28 +210,27 @@ def screen_setting(bk_w, bk_h):
                 if event.type == p.QUIT:
                     sys.exit()
 
-                all_sprites.update(event)
+                level_sprites.update(event)
 
 
             screen.blit(bg5, (0, 0))
 
             if p.mouse.get_focused():
-                all_sprites.draw(screen)
-                all_sprites.update()
+                level_sprites.draw(screen)
+                level_sprites.update()
                 x, y = pos = p.mouse.get_pos()
                 screen.blit(mouse_image_transform, (x - 10, y - 15))
                 clock.tick(FPS)
                 p.display.update()
 
             else:
-                all_sprites.draw(screen)
-                all_sprites.update()
+                level_sprites.draw(screen)
+                level_sprites.update()
                 clock.tick(FPS)
                 p.display.update()
 
 
 Spawn = False
-Kill5 = False
 Menu = True
 InLevel_5 = False
 InLevel_4 = False
