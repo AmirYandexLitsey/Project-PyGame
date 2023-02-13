@@ -22,7 +22,6 @@ w = [0, 2, 4, 6, 8, 10, 12, 14, 16]
 h = [1, 3, 5, 7, 9, 11, 13, 15, 17]
 
 
-
 class Level1(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -127,7 +126,7 @@ class Rat(pygame.sprite.Sprite):
         global Point
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             Point += 1
-            pygame.mixer.music.load("zvuk-vyibivaniya-monetyi-iz-igryi-super-mario-30119.mp3")
+            pygame.mixer.music.load("Изображения/zvuk-vyibivaniya-monetyi-iz-igryi-super-mario-30119.mp3")
             pygame.mixer.music.play(0, 1, 0)
             self.kill()
 
@@ -156,7 +155,10 @@ class Back(pygame.sprite.Sprite):
             Menu = True
             Point = 0
 
+
 font_name = pygame.font.match_font('arial')
+
+
 def draw_text(surf, text, size, x, y):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, WHITE)
@@ -168,36 +170,67 @@ def draw_text(surf, text, size, x, y):
 def screen_setting(bk_w, bk_h):
     global window, ran, ran2
     window = False
+
     screen = p.display.set_mode((bk_w, bk_h), 0)
+
     p.display.set_caption('Поймай крысу')  # название окна
+
     p.display.set_icon(pygame.image.load("Изображения/icon.png"))  # ставим иконку крысы для окна
+
     bk_orig = p.image.load("Изображения/Phon.jpg").convert()
+
     bg_orig5 = p.image.load("Изображения/5_level_bg2.0.png").convert()
+
     bg_orig4 = p.image.load("Изображения/4_level_bg2.0.png").convert()
+
     bg_orig3 = p.image.load("Изображения/3_level_bg2.0.png").convert()
+
     bg_orig2 = p.image.load("Изображения/2_level_bg2.0.png").convert()
+
     bg_orig1 = p.image.load("Изображения/1_level_bg2.0.png").convert()
+
     mouse_image = p.image.load("Изображения/2534908.png").convert()
+
     mouse_image_transform = p.transform.smoothscale(mouse_image, (30, 30))
+
     color = mouse_image_transform.get_at((0, 0))
+
     mouse_image_transform.set_colorkey(color)
+
     pygame.mouse.set_visible(False)
+
     bg = p.transform.smoothscale(bk_orig, (bk_w, bk_h))
+
     bg5 = p.transform.smoothscale(bg_orig5, (bk_w, bk_h))
+
     bg4 = p.transform.smoothscale(bg_orig4, (bk_w, bk_h))
+
     bg3 = p.transform.smoothscale(bg_orig3, (bk_w, bk_h))
+
     bg2 = p.transform.smoothscale(bg_orig2, (bk_w, bk_h))
+
     bg1 = p.transform.smoothscale(bg_orig1, (bk_w, bk_h))
+
     clock = p.time.Clock()
+
     menu_sprites = pygame.sprite.Group()
+
     back = Back()
+
     rat = Rat()
+
     level_sprites = p.sprite.Group(back, rat)
+
     Spawn = False
+
     level1 = Level1()
+
     level2 = Level2()
+
     level3 = Level3()
+
     level4 = Level4()
+
     level5 = Level5()
     menu_sprites.add(level1, level2, level3, level4, level5)
     while True:
@@ -281,11 +314,15 @@ def screen_setting(bk_w, bk_h):
                 Spawn = False
                 if c % 60 == 0 and c % 660 != 0:
                     ran = random.choice(w)
+
                     ran2 = random.choice(h)
+
                     Spawn = True
                 elif c % 110 == 0:
                     level_sprites.remove(rat, rat)
+
                     rat = Rat()
+
                     Spawn = False
 
             if Spawn:
